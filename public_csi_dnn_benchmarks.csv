@@ -1,0 +1,22 @@
+,RNN,,,
+Benchmark,Description,Frameworks,Use case,Source
+glample,"Single layer unidirection RNN, variable width, variable cell config (rnn/lstm/basiclstm)",TF,kernel,https://github.com/glample/rnn-benchmarks
+deepbench rnn,"Single layer unidirection,RNN, variable width, variable cell config (rnn/lstm/gru)",CUDA,kernels,https://github.com/baidu-research/DeepBench
+ptb,"2 layer unidirection, variable width, lstm (small), lstmblock(med, large)",TF,Parsing corpus,https://github.com/tensorflow/models
+bi-att-flow (BiDAF),"Single layer, bidirectional, attention flow",TF,Question/answer,https://github.com/allenai/bi-att-flow/tree/dev
+seq2seq,"Multi layer bidirectional, attention flow, seq2seq, basiclstm/gru",TF,Language translation,https://github.com/google/seq2seq.git (requires minor patch)
+nmt,"Multi layer (4/8 def), bidirectional, attention, seq2seq lstm variable width (~1024)",TF,Language translation,https://github.com/tensorflow/nmt
+tensor2tensor,"6 hidden layer transformer feed forward, attention, encoder/decoder ",TF,Language translation,https://github.com/tensorflow/tensor2tensor
+deepspeech2,2 layer custom rnn (1024 width) + 64 layer cnn,TF,speech recognition,https://github.com/fordDeepDSP/deepSpeech
+fairseq lstm,"Multi layer bidirectional, attention flow, seq2seq lstm",TO,Language translation,https://github.com/facebookresearch/fairseq
+fairseq dnn,Multi layer CNN with attention flow,TO,Language translation,https://github.com/facebookresearch/fairseq
+sockeye ,multi layer seq2seq translator with attention mechanism,MXNET,Language translation,https://github.com/awslabs/sockeye
+fairseq-py,"Multi layer bidirectional, attention flow, seq2seq lstm",PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
+fairseq-py,Multi layer CNN with attention flow,PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
+,CNN,,,
+Benchmark,Description,Frameworks,Use case,Source
+tf_cnn,"Image recognition using 5 standard CNNs + size variants - Alexnet, Googlenet, VGG11-19, Inception3, Resnet50-152 driven using Imagenet/synthetic data",TF,Image recognition,https://github.com/tensorflow/benchmarks
+HKBU CNNs,"Image recognition using FCN5, Alexnet and Resnet","TF, CN, TO",Image recognition,https://github.com/hclhkbu/dlbench
+SoumithC CNNs,"Image recognition using Alexnet, Googlenet & Vgg (this is the base for a few othr benchmarks)",TF,Image recognition,https://github.com/soumith/convnet-benchmarks
+Cifar10,Image recognition with modified Alexnet model using University of Toronto's CIFAR-10 dataset,TF,Image recognition,https://github.com/tensorflow/models/tree/master/tutorials/image/cifar10
+densenet,feed forward version of resnet inspired network,"TF,torch,mxnet,caffe, keras",Image recognition,https://github.com/liuzhuang13/DenseNet
