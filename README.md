@@ -1,5 +1,6 @@
 # machine-learning
 repository for notes and data from machine learning studies
+
 Please feel free to point out errors or ask questions by submitting issues
 
 The rapid rise in the successful use of machine learning (ML) algorithms raises the issue of what an optimal architecture for ML acceleration should look like. To help such an investigation, some discussion of the numerical operations of the dominant ML networks is required as a starting point. What follows will hopefully shed some light on this.
