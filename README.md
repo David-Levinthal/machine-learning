@@ -8,3 +8,6 @@ The two dominant ML network architectures, at the time of this writing, are conv
 
 https://github.com/David-Levinthal/machine-learning/blob/master/Introduction%20to%20machine%20learning%20algorithms.pdf
 
+Useful applications for evaluating hardware performance and software support/performance for an assortment of frameworks
+
+https://github.com/David-Levinthal/machine-learning/blob/master/public_csi_dnn_benchmarks.csv
