@@ -13,6 +13,7 @@ fairseq dnn,Multi layer CNN with attention flow,TO,Language translation,https://
 sockeye ,multi layer seq2seq translator with attention mechanism,MXNET,Language translation,https://github.com/awslabs/sockeye
 fairseq-py,"Multi layer bidirectional, attention flow, seq2seq lstm",PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
 fairseq-py,Multi layer CNN with attention flow,PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
+Deepspeech1,FCNs feeding LSTM rnn feeding FCN,TF,Speech to Text,https://github.com/mozilla/DeepSpeech
 ,CNN,,,
 Benchmark,Description,Frameworks,Use case,Source
 tf_cnn,"Image recognition using 5 standard CNNs + size variants - Alexnet, Googlenet, VGG11-19, Inception3, Resnet50-152 driven using Imagenet/synthetic data",TF,Image recognition,https://github.com/tensorflow/benchmarks
