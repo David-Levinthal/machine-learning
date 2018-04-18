@@ -3,17 +3,18 @@ Benchmark,Description,Frameworks,Use case,Source
 glample,"Single layer unidirection RNN, variable width, variable cell config (rnn/lstm/basiclstm)",TF,kernel,https://github.com/glample/rnn-benchmarks
 deepbench rnn,"Single layer unidirection,RNN, variable width, variable cell config (rnn/lstm/gru)",CUDA,kernels,https://github.com/baidu-research/DeepBench
 ptb,"2 layer unidirection, variable width, lstm (small), lstmblock(med, large)",TF,Parsing corpus,https://github.com/tensorflow/models
-bi-att-flow (BiDAF),"Single layer, bidirectional, attention flow",TF,Question/answer,https://github.com/allenai/bi-att-flow/tree/dev
+bi-att-flow (BiDAF),"Single layer, bidirectional, attention flow",TF,Question/answer,https://github.com/allenai/bi-att-flow/tree/dev (broken at TF R1.4)
+bi-att-flow (BiDAF),"Single layer, bidirectional, attention flow",TF,Question/answer,https://github.com/klintan/bi-att-flow/tree/dev   Tested on TF R1.7
 seq2seq,"Multi layer bidirectional, attention flow, seq2seq, basiclstm/gru",TF,Language translation,https://github.com/google/seq2seq.git (requires minor patch)
 nmt,"Multi layer (4/8 def), bidirectional, attention, seq2seq lstm variable width (~1024)",TF,Language translation,https://github.com/tensorflow/nmt
 tensor2tensor,"6 hidden layer transformer feed forward, attention, encoder/decoder ",TF,Language translation,https://github.com/tensorflow/tensor2tensor
-deepspeech2,2 layer custom rnn (1024 width) + 64 layer cnn,TF,speech recognition,https://github.com/fordDeepDSP/deepSpeech
 fairseq lstm,"Multi layer bidirectional, attention flow, seq2seq lstm",TO,Language translation,https://github.com/facebookresearch/fairseq
 fairseq dnn,Multi layer CNN with attention flow,TO,Language translation,https://github.com/facebookresearch/fairseq
 sockeye ,multi layer seq2seq translator with attention mechanism,MXNET,Language translation,https://github.com/awslabs/sockeye
 fairseq-py,"Multi layer bidirectional, attention flow, seq2seq lstm",PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
 fairseq-py,Multi layer CNN with attention flow,PyTorch,Language translation,https://github.com/facebookresearch/fairseq-py
 Deepspeech1,FCNs feeding LSTM rnn feeding FCN,TF,Speech to Text,https://github.com/mozilla/DeepSpeech
+Deep Speech 2,CNN feeding LSTM rnn feeding FCN,MXNet,speech recognition,https://github.com/apache/incubator-mxnet/tree/master/example/speech_recognition
 ,CNN,,,
 Benchmark,Description,Frameworks,Use case,Source
 tf_cnn,"Image recognition using 5 standard CNNs + size variants - Alexnet, Googlenet, VGG11-19, Inception3, Resnet50-152 driven using Imagenet/synthetic data",TF,Image recognition,https://github.com/tensorflow/benchmarks
