@@ -1,0 +1,9 @@
+Usage,TF,,MxNet,,PyTorch-Caffe2 merge,
+CNN,TF_CNN_Benchmark,https://github.com/tensorflow/benchmarks,mxnet image-classification,https://github.com/apache/incubator-mxnet/tree/master/example/image-classification,vision,https://github.com/pytorch/vision
+seq2seq Translation,NMT,https://github.com/tensorflow/nmt,Sockeye,https://github.com/awslabs/sockeye,OpenNMT,https://github.com/OpenNMT/OpenNMT-py
+Transformer Translation,tensor2tensor,https://github.com/tensorflow/tensor2tensor,Sockeye,https://github.com/awslabs/sockeye,OpenNMT,https://github.com/OpenNMT/OpenNMT-py
+CNN Translation,,,Sockeye,https://github.com/awslabs/sockeye,OpenNMT,https://github.com/OpenNMT/OpenNMT-py
+Deepspeech2,,,examples/speech-recognition,https://github.com/apache/incubator-mxnet/tree/master/example/speech_recognition,OpenNMT?,https://github.com/OpenNMT/OpenNMT-py
+Question-answer,Bidaf  does not parallelize,https://github.com/klintan/bi-att-flow/tree/dev,,,,
+Reinforced learning,minigo??,,,,,
+GAN,,,,,,
