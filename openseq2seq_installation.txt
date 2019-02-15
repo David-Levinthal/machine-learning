@@ -1,0 +1,135 @@
+
+update nvidia packages
+
+remove all old MPI installations
+
+1) remove all exiting MPI components
+sudo find / -name 'libmpi*'
+sudo rm /etc/alternatives/mpi*
+sudo rm -rf /etc/openmpi
+sudo rm /usr/bin/mpi*
+sudo find / -name 'libmpi*'
+sudo rm -rf /usr/lib/openmpi
+sudo rm -rf /usr/lib/libmpi*
+sudo find / -name 'libmpi*'
+sudo rm /etc/alternatives/libmpi.so
+sudo rm /etc/alternatives/libmpi*
+sudo pip uninstall mpi4py
+sudo pip3 uninstall mpi4py
+sudo pip3.6 uninstall mpi4py
+
+there may be issues with multiple boost installs, from source, interacting with old MPI packages 
+removing boost can be problematic but may be required so a clean install can be made
+you have been warned
+
+get openmpi-4.0.0
+wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.0.tar.gz
+tar xzf openmpi-4.0.0.tar.gz 
+cd openmpi-4.0.0/
+./configure --prefix=/usr/local
+make all
+sudo make install
+sudo ldconfig
+
+sudo apt-get install libboost-dev
+sudo apt-get install libboost-all-dev
+sudo apt-get install cmake
+sudo ldconfig
+
+install python3.6
+cd /usr/src
+sudo apt-get install build-essential checkinstall libreadline-gplv2-dev libncursesw5-dev libssl-dev sudo apt-get install libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+sudo wget https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tgz
+sudo tar xzf Python-3.6.4.tgz
+cd Python-3.6.4
+sudo ./configure --enable-optimizations
+cd /usr/src/Python-3.6.4/Modules/
+ls
+ls ssl*
+sudo vi Setup
+uncomment
+_ssl _ssl.c \
+    -DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl \
+    -L$(SSL)/lib -lssl -lcrypto
+cd ..
+
+sudo make altinstall
+
+pip3.6 -V
+
+
+
+install OpenSeq2Seq
+cd ~/
+git clone https://github.com/NVIDIA/OpenSeq2Seq
+cd OpenSeq2Seq
+sudo pip3.6 install https://bitbucket.org/mpi4py/mpi4py/get/maint.zip
+sudo pip3.6 install -r requirements.txt
+./scripts/install_kenlm.sh
+building kenlm can have issues...these may be due to missing boost shared objects
+      you may need to disable the build ofthe tests, parallel make (for easier debug)
+       diff scripts/install_kenlm.sh scripts/install_kenlm2.sh 
+      9,10c9,10
+    < cmake ..
+    < make -j
+    ---
+    > cmake -DBUILD_TESTING=0 ..
+    > make 
+and even upgrade the compiler from the default
+
+there are components needed to get TF to build from source  installing keras into 3 python trees will
+save aggravation later
+note: if using python3.6 built from /usr/src
+you also need  likely these should also be installed with pip and pip3
+sudo pip3.6 install h5py
+sudo pip3.6 install mock
+sudo pip3.6 install wheel
+sudo pip3.6 install sox
+
+git clone https://github.com/keras-team/keras.git
+cd keras
+sudo python setup.py install
+sudo python3 setup.py install
+sudo python3.6 setup.py install
+
+
+install tensorflow per instructions
+remove old tensorflow directory or move it
+make a home directory for installing the tensorflow wheel into for example:
+cd ~/
+mkdir tf_r1.12_c10_742_py36
+git clone https://github.com/tensorflow/tensorflow
+cd tensorflow
+git checkout r1.12
+./configure
+      in the configure execution..set the python directory to /usr/local/bin/python3.6
+      do not respond Y to the question about building with MPI
+
+ln -s $HOME/OpenSeq2Seq/ctc_decoder_with_lm ./
+bazel build -c opt --copt=-mavx --copt=-mavx2 --copt=-mfma --copt=-mfpmath=both --copt=-msse4.2 --copt=-O3 --config=cuda //tensorflow/tools/pip_package:build_pip_package //tensorflow:libtensorflow_cc.so //tensorflow:libtensorflow_framework.so //ctc_decoder_with_lm:libctc_decoder_with_kenlm.so //ctc_decoder_with_lm:generate_trie > build.log 2>&1
+
+cp bazel-bin/ctc_decoder_with_lm/*.so ctc_decoder_with_lm/
+cp bazel-bin/ctc_decoder_with_lm/generate_trie ctc_decoder_with_lm/
+sudo bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
+sudo pip3.6 install /tmp/tensorflow_pkg/<your tensorflow build>.whl -t ~/tf_your_directory
+
+
+open a new shell
+export PYTHONPATH=~/tf_r1.12_c10_742_py36
+python3.6 -c "import tensorflow as tf; print(tf.__version__)"
+install horovod
+sudo PYTHONPATH=/home/levinth/tf_r1.12_c10_742_py36 HOROVOD_GPU_ALLREDUCE=NCCL pip3.6 install --no-cache-dir horovod
+set up the data files and language model
+cd OpenSeq2Seq
+./scripts/download_lm.sh
+       this takes a while
+mkdir -p data/librispeech
+cd scripts
+vi get_en_de.sh
+.,$s/python/python3.6/g
+shift-ZZ
+cd ..
+these next two take even longer  :-)  likely a good idea to reroute output/stderr to logs
+./scripts/get_en_de.sh > trans_data.log 2>&1
+python3.6 scripts/import_librivox.py data/librispeech > libri_data.log 2>&1
+
