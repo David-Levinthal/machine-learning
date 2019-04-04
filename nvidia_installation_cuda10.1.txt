@@ -1,0 +1,167 @@
+Nvidia installation
+
+log in with putty
+use putty for the connection after logging out from all gui (x2go)sessions
+sudo systemctl disable lightdm.service
+uninstall everything
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get purge --remove nvidia*
+sudo apt-get purge --remove nvidia-*
+sudo apt-get purge --remove nvidia-410*
+sudo apt-get purge --remove nvidia-418*
+sudo apt-get purge --remove cuda-*
+sudo apt-get purge --remove libcudnn7-*
+sudo apt-get purge --remove libcudnn7*
+sudo apt-get purge --remove nccl-repo-*
+sudo apt-get purge --remove libnccl-dev*
+sudo apt-get purge --remove libnccl2*
+sudo apt-get purge --remove nv-tensorrt-*
+sudo apt-get purge --remove graphsurgeon-tf
+ls /usr/local
+sudo apt-get autoclean
+sudo apt-get autoremove
+for k in $(dpkg -l | grep -i cuda | cut -f3 -d" "); do sudo dpkg --purge  "$k";  done
+ls -l /var/lib/apt/lists/_var_*
+these should all be nvidia repository lists. they can be removed
+
+sudo rm /var/lib/apt/lists/_var_*
+sudo apt-get autoremove
+
+cleaning up docker droppings can be done with
+sudo docker system prune -a
+
+sudo rm -rf /usr/local/cuda*
+sudo rm -rf /usr/local/cudn*
+sudo rm -rf /usr/local/tensor*
+sudo rm -rf /usr/local/nccl
+
+use 
+dpkg -l | grep -i nvidia
+dpkg -l | grep -i cuda
+to make sure the machine is cleaned
+use dpkg --purge and sudo apt-get purge to remove remaining files
+the order will matter as there can be dependencies
+
+use
+sudo find / -name '*nvidia*'
+sudo find / -name '*cuda*'
+to make sure the machine is cleaned
+
+
+assumes your deb files are in ~/nvidia_10
+cd nvidia_10
+ls
+# there is a new 145 file now
+
+
+sudo dpkg -i cuda-repo-ubuntu1604-10-1-local-10.1.105-418.39_1.0-1_amd64.deb
+sudo apt-key add /var/cuda-repo-10-1-local-10.1.105-418.39/7fa2af80.pub
+sudo dpkg -i nvidia-driver-local-repo-ubuntu1604-410.59_1.0-1_amd64.deb
+sudo apt-get update
+sudo apt-get install cuda
+
+sudo reboot now
+log in again with putty
+check that the right driver is installed with nvidia-smi
+
+sudo dpkg -i libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
+sudo dpkg -i libcudnn7-dev_7.5.0.56-1+cuda10.1_amd64.deb
+sudo dpkg -i libcudnn7-doc_7.5.0.56-1+cuda10.1_amd64.deb
+sudo apt-get update
+sudo dpkg -i nccl-repo-ubuntu1604-2.4.2-ga-cuda10.1_1-1_amd64.deb
+sudo apt update
+sudo dpkg -i nv-tensorrt-repo-ubuntu1604-cuda10.0-trt5.0.0.10-rc-20180906_1-1_amd64.deb
+sudo apt-get update
+sudo apt install libnccl2 libnccl-dev
+sudo apt-get install tensorrt
+
+if the dpkg -i stuff fails complaining abvout old versions you may need to edit
+vi /var/lib/dpkg/status
+and remove the blocks referencing the old files
+or just start over with the block of uninstalls at the top of this document
+use 
+dpkg -l | grep -i nvidia
+dpkg -l | grep -i cuda
+to make sure the machine is cleaned if you are going to start over
+
+now find the cudnn stuff and move it to /usr/local/cuda link source
+/usr/local/cuda-10.0
+sudo find / -name 'cudnn*'
+sudo find / -name 'libcudnn*'
+copy to /usr/local/cuda-10.0/targets/x86_64-linux/   include and lib
+
+as root
+ cp /usr/include/x86_64-linux-gnu/cudnn_v7.h /usr/local/cuda-10.1/targets/x86_64-linux/include/
+ ln -s /usr/local/cuda-10.1/targets/x86_64-linux/include/cudnn_v7.h /usr/local/cuda-10.1/targets/x86_64-linux/include/cudnn.h
+ cp /usr/lib/x86_64-linux-gnu/libcudnn_static_v7.a /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+ cp /usr/lib/x86_64-linux-gnu/libcudnn.so.7.5.0 /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+ ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn_static_v7.a /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn_static.a
+ ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn.so.7.5.0 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn.so.7
+ ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn.so.7 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcudnn.so
+
+fix up 10.1 install
+cp /usr/lib/x86_64-linux-gnu/libcublasLt.so.10.1.0.105 /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+cp /usr/lib/x86_64-linux-gnu/libcublasLt_static.a /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+cp /usr/lib/x86_64-linux-gnu/libcublas.so.10.1.0.105 /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+cp /usr/lib/x86_64-linux-gnu/libcublas_static.a /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+cp /usr/lib/x86_64-linux-gnu/libcuda.so.418.39 /usr/local/cuda-10.1/targets/x86_64-linux/lib/
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so.10.1.0.105 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so.10.1
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so.10.1.0.105 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so.10
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so.10.1 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublasLt.so
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so.10.1.0.105 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so.10.1
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so.10.1 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so.10
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so.10 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcublas.so
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcuda.so.418.39 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcuda.so.1
+ln -s /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcuda.so.1 /usr/local/cuda-10.1/targets/x86_64-linux/lib/libcuda.so
+ln -s /usr/local/cuda/lib64/libcusparse.so.10.1.105 /usr/local/cuda/lib64/libcusparse.so.10.1
+ln -s /usr/local/cuda/lib64/libcusolver.so.10.1.105 /usr/local/cuda/lib64/libcusolver.so.10.1
+ln -s /usr/local/cuda/lib64/libcurand.so.10.1.105 /usr/local/cuda/lib64/libcurand.so.10.1
+ln -s /usr/local/cuda/lib64/libcufftw.so.10.1.105 /usr/local/cuda/lib64/libcufftw.so.10.1
+ln -s /usr/local/cuda/lib64/libcufft.so.10.1.105 /usr/local/cuda/lib64/libcufft.so.10.1
+cp /usr/include/cub*.h /usr/local/cuda/include
+
+
+find the nccl stuff and install it into /usr/local/nccl
+as root
+ find / -name '*nccl*'
+ find / -name 'NCCL-SLA*'
+
+as root
+ mkdir -p /usr/local/nccl/include
+ mkdir /usr/local/nccl/lib
+ ls -l /usr/include/nccl.h
+-rw-r--r-- 1 root root 9616 May  1 11:55 /usr/include/nccl.h
+cp /usr/include/nccl.h /usr/local/nccl/include
+cp /usr/lib/x86_64-linux-gnu/libnccl.so.2.4.2 /usr/local/nccl/lib
+cp /usr/lib/x86_64-linux-gnu/libnccl_static.a /usr/local/nccl/lib
+ln -s /usr/local/nccl/lib/libnccl.so.2.4.2 /usr/local/nccl/lib/libnccl.so.2
+ln -s /usr/local/nccl/lib/libnccl.so.2 /usr/local/nccl/lib/libnccl.so
+what was the NCCL-SLA file file may be called copyright???
+cp /usr/share/doc/libnccl2/copyright /usr/local/nccl
+cd /usr//local/nccl
+
+
+
+finish off tensorrt
+sudo apt-get install python-libnvinfer-doc
+sudo apt-get install python3-libnvinfer-doc
+sudo apt-get install uff-converter-tf
+dpkg -l | grep TensorRT
+
+su
+mkdir -p /usr/local/tensorrt/include
+mkdir /usr/local/tensorrt/lib
+ls -l /usr/lib/x86_64-linux-gnu/libnvinfer*
+cp /usr/lib/x86_64-linux-gnu/libnvinfer_static.a /usr/local/tensorrt/lib
+cp /usr/lib/x86_64-linux-gnu/libnvinfer_plugin_static.a /usr/local/tensorrt/lib
+cp /usr/lib/x86_64-linux-gnu/libnvinfer_plugin.so.5 /usr/local/tensorrt/lib
+cp /usr/lib/x86_64-linux-gnu/libnvinfer.so.5 /usr/local/tensorrt/lib
+ln -s /usr/local/tensorrt/lib/libnvinfer_plugin.so.5 /usr/local/tensorrt/lib/libnvinfer_plugin.so
+ln -s /usr/local/tensorrt/lib/libnvinfer.so.5 /usr/local/tensorrt/lib/libnvinfer.so
+
+
+
+restart lightdm
+service lightdm restart
+reboot
