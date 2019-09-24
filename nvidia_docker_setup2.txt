@@ -1,0 +1,67 @@
+ sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+sudo apt update
+#sudo apt install docker-ce -y
+
+sudo apt install docker-ce=18.03.0~ce-0~ubuntu -y --allow-downgrades
+
+# Install nvidia-docker2
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey |   sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/ubuntu16.04/nvidia-docker.list |   sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+sudo apt install nvidia-docker2 -y
+sudo tee /etc/docker/daemon.json <<EOF
+{
+    "runtimes": {
+	"nvidia": {
+	    "path": "/usr/bin/nvidia-container-runtime",
+	    "runtimeArgs": []
+	}
+    }
+}
+EOF
+sudo pkill -SIGHUP dockerd
+sudo apt install bridge-utils
+su
+service docker stop
+sleep 1;
+iptables -t nat -F
+sleep 1;
+ifconfig docker0 down
+sleep 1;
+brctl delbr docker0
+sleep 1;
+service docker start
+exit;
+
+ls -ld .docker
+if required change permissions so the current account owns the directory
+sudo chown -R $USER.$USER .docker
+
+ls -ld .docker/
+ls -l .docker/
+exit
+wget https://ngc.nvidia.com/downloads/ngccli_reg_linux.zip && unzip ngccli_reg_linux.zip && chmod u+x ngc
+
+for what follows the user must be a member of the docker group
+sudo usermod -a -G docker $USER
+if one then executes
+groups
+docker will NOT appear
+the user must log out and log in again for the change to take hold
+
+now some text...one needs to have created an API key on the nvidia ncg page (https://ngc.nvidia.com/setup)and 
+copied it to a file for future use. This needs to include a linefeed after the key..ie the file has 2 lines
+then
+docker login nvcr.io
+that will ask for Username the user name must be $oauthtoken
+Username ($oauthtoken):
+Password:  paste-you-API-key-here   (be sure the paste includes a linefeed at the end or it just hangs)
+You need to paste your API Key in as the password from the file (with the linefeed). Then you should see,
+Login Succeeded
+
